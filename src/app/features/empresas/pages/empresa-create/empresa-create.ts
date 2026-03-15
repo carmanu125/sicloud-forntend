@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { EmpresaService } from '../../services/empresa.service';
 import { Empresa } from '../../models/empresa.model';
@@ -9,7 +9,7 @@ import { Empresa } from '../../models/empresa.model';
 @Component({
   selector: 'app-empresa-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './empresa-create.html'
 })
 export class EmpresaCreate {
