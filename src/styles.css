@@ -21,6 +21,7 @@
 }
 
 .bg-primary { background-color: var(--color-primary); }
+.text-primary { color: var(--color-primary); }
 .text-on-primary { color: var(--color-on-primary); }
 .bg-primary-container { background-color: var(--color-primary-container); }
 .text-on-primary-container { color: var(--color-on-primary-container); }

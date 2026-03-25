@@ -2,17 +2,20 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { Presupuesto } from '../../models/presupuesto.model';
 import { PresupuestoService } from '../../services/presupuesto.service';
+import { ProgressBarComponent } from '../../../../shared';
 
 @Component({
   selector: 'app-presupuesto-create',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ProgressBarComponent],
   templateUrl: './presupuesto-create.html',
   styleUrl: './presupuesto-create.css',
 })
 export class PresupuestoCreate {
   formPresupuesto: FormGroup;
+  isSaving$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private fb: FormBuilder,
@@ -44,14 +47,17 @@ export class PresupuestoCreate {
 
     const presupuesto: Presupuesto = this.formPresupuesto.value;
 
+    this.isSaving$.next(true);
     this.presupuestoService.createPresupuesto(presupuesto)
       .subscribe({
 
         next: () => {
+          this.isSaving$.next(false);
           this.router.navigate(['/presupuesto']);
         },
 
         error: (err) => {
+          this.isSaving$.next(false);
           console.error("Error creando presupuesto", err);
         }
 

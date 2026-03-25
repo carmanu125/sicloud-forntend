@@ -5,6 +5,7 @@ module.exports = {
   ],
   safelist: [
     "bg-primary",
+    "text-primary",
     "text-on-primary",
     "bg-primary-container",
     "text-on-primary-container",

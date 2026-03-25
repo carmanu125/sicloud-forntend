@@ -1,4 +1,7 @@
 <div class="bg-surface text-on-surface selection:bg-secondary-container">
+    <!-- Progress Bar Component -->
+    <app-progress-bar [isLoading$]="isLoading$"></app-progress-bar>
+
     <!-- Main Content Canvas - Removed mt-16 as header is gone, kept max-width container -->
     <main class="py-12 px-10 min-h-screen max-w-7xl mx-auto">
         <!-- Breadcrumb & Header Title -->
@@ -69,16 +72,42 @@
                     <span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
                     Detalle de Rubros Presupuestales
                 </h3>
-                <form [formGroup]="formBusqueda" (ngSubmit)="buscar()" class="mb-6 flex gap-3">
+                <div class="mb-6">
+                    <button type="button" (click)="abrirModal()"
+                        class="w-80 flex items-center justify-between px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface-container-lowest hover:bg-surface-container transition-all shadow-sm">
 
-                    <input type="number" formControlName="presupuestoId" placeholder="Ingrese ID del presupuesto"
-                        class="border rounded-lg px-4 py-2 text-sm w-64" />
+                        <!-- LEFT -->
+                        <div class="flex items-center gap-3">
 
-                    <button type="submit" class="bg-primary  px-4 py-2 rounded-lg text-sm">
-                        Buscar
+                            <span class="material-symbols-outlined text-primary">
+                                account_balance
+                            </span>
+
+                            <div class="text-left">
+
+                                @if (!presupuestoSeleccionado) {
+                                <p class="text-sm text-on-surface-variant">
+                                    Seleccionar presupuesto...
+                                </p>
+                                } @else {
+                                <p class="text-sm font-semibold text-on-surface">
+                                    {{ presupuestoSeleccionado.nombre }}
+                                </p>
+                                
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT -->
+                        <span class="material-symbols-outlined text-on-surface-variant">
+                            expand_more
+                        </span>
+
                     </button>
 
-                </form>
+                </div>
                 <div class="flex gap-2">
                     <button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
                         <span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
@@ -90,20 +119,21 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
-                    
+
                     <thead>
                         <tr class="bg-surface-container-low/50">
-                            <th colspan="8" class="px-8 py-4 text-sm font-bold text-on-surface-variant uppercase tracking-wider">
+                            <th colspan="8"
+                                class="px-8 py-4 text-sm font-bold text-on-surface-variant uppercase tracking-wider">
                                 <button (click)="showNewRow = true"
-                            class="bg-primary text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                                    class="bg-primary text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
 
-                            <span class="material-symbols-outlined">add</span>
-                            Agregar CDP
+                                    <span class="material-symbols-outlined">add</span>
+                                    Agregar CDP
 
-                        </button>
+                                </button>
                             </th>
                         </tr>
-                        
+
                         <tr class="bg-surface-container-low/50">
                             <th
                                 class="px-8 py-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
@@ -144,12 +174,8 @@
 
                             <td class="px-4 py-4 text-right">
 
-                                <input
-                                    type="number"
-                                    [formControl]="formNuevoCdp.controls.valor"
-                                    placeholder="Valor CDP"
-                                    class="border rounded-lg px-3 py-1 text-sm w-32 text-right"
-                                    />
+                                <input type="number" [formControl]="formNuevoCdp.controls.valor" placeholder="Valor CDP"
+                                    class="border rounded-lg px-3 py-1 text-sm w-32 text-right" />
 
                             </td>
 
@@ -277,5 +303,53 @@
         </div>
 
     </main>
+
+    <!-- Modal de selección de presupuesto -->
+    @if (showModal) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-surface max-w-4xl w-full mx-4 rounded-xl shadow-xl max-h-[80vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-surface-container">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-primary">Seleccionar Presupuesto</h2>
+                    <button (click)="cerrarModal()" class="text-on-surface-variant hover:text-on-surface">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <div class="grid gap-4">
+                    @for (presupuesto of presupuestos; track presupuesto.id) {
+                    <div (click)="seleccionarPresupuesto(presupuesto)"
+                        class="p-4 border border-surface-container rounded-lg cursor-pointer hover:bg-surface-container-low hover:border-primary transition-all">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-on-surface">{{ presupuesto.nombre }}</h3>
+                                <p class="text-sm text-on-surface-variant mt-1">
+                                    Rubro: {{ presupuesto.rubro }} | Fuente: {{ presupuesto.fuente }}
+                                </p>
+                                <p class="text-xs text-on-surface-variant mt-2">
+                                    Producto: {{ presupuesto.producto }} | Programa: {{ presupuesto.programa }}
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-bold text-primary">ID: {{ presupuesto.id }}</span>
+                                <p class="text-xs text-on-surface-variant mt-1">
+                                    Inicial: {{ presupuesto.inicial | currency }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    } @empty {
+                    <div class="text-center py-8 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-4xl mb-2">search_off</span>
+                        <p>No hay presupuestos disponibles</p>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    }
 
 </div>

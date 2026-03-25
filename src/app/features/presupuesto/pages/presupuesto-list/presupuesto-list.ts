@@ -4,11 +4,12 @@ import { Presupuesto } from '../../models/presupuesto.model';
 import { PresupuestoService } from '../../services/presupuesto.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
+import { combineLatest, map, Observable, startWith, BehaviorSubject, tap, finalize, merge } from 'rxjs';
+import { ProgressBarComponent } from '../../../../shared';
 
 @Component({
   selector: 'app-presupuesto-list',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ProgressBarComponent],
   templateUrl: './presupuesto-list.html',
   styleUrl: './presupuesto-list.css',
 })
@@ -16,6 +17,11 @@ export class PresupuestoList implements OnInit {
 
   presupuestos$!: Observable<Presupuesto[]>;
   presupuestosFiltrados$!: Observable<Presupuesto[]>;
+  isLoading$ = new BehaviorSubject<boolean>(false);
+  isDeleting$ = new BehaviorSubject<boolean>(false);
+
+  // Observable combinado para la barra de progreso
+  isLoadingCombined$ = merge(this.isLoading$, this.isDeleting$);
 
   formBusqueda!: FormGroup;
 
@@ -32,7 +38,10 @@ export class PresupuestoList implements OnInit {
     });
 
     // obtener datos
-    this.presupuestos$ = this.presupuestoService.getPresupuestos();
+    this.presupuestos$ = this.presupuestoService.getPresupuestos().pipe(
+      tap(() => this.isLoading$.next(true)),
+      finalize(() => this.isLoading$.next(false))
+    );
 
     // filtro reactivo (igual que empresas)
     this.presupuestosFiltrados$ = combineLatest([
@@ -56,9 +65,16 @@ export class PresupuestoList implements OnInit {
   delete(id: number) {
     if (!confirm('¿Eliminar presupuesto?')) return;
 
+    this.isDeleting$.next(true);
     this.presupuestoService.delete(id).subscribe(() => {
       // recargar stream
-      this.presupuestos$ = this.presupuestoService.getPresupuestos();
+      this.presupuestos$ = this.presupuestoService.getPresupuestos().pipe(
+        tap(() => this.isLoading$.next(true)),
+        finalize(() => {
+          this.isLoading$.next(false);
+          this.isDeleting$.next(false);
+        })
+      );
     });
   }
 }
