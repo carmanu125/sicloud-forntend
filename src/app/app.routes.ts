@@ -4,6 +4,9 @@ import { DashboardLayout } from './layout/dashboard-layout/dashboard-layout';
 import { DashboardHome } from './features/dashboard/pages/dashboard-home/dashboard-home';
 import { EmpresaCreate } from './features/empresas/pages/empresa-create/empresa-create';
 import { EmpresaEdit } from './features/empresas/pages/empresa-edit/empresa-edit';
+import { PresupuestoList } from './features/presupuesto/pages/presupuesto-list/presupuesto-list';
+import { PresupuestoCreate } from './features/presupuesto/pages/presupuesto-create/presupuesto-create';
+import { CdpList } from './features/cdp/pages/cdp-list/cdp-list';
 
 export const routes: Routes = [
     {
@@ -15,21 +18,18 @@ export const routes: Routes = [
           path: 'dashboard',
           component: DashboardHome
         },
-
         {
-          path: 'empresas',
-          component: EmpresaList
+          path: 'presupuesto',
+          component: PresupuestoList
         },
         {
-          path: 'empresas/nueva',
-          component: EmpresaCreate
+          path: 'presupuesto/nuevo',
+          component: PresupuestoCreate
         },
-
         {
-          path: 'empresas/editar/:id',
-          component: EmpresaEdit
+          path: 'cdp',
+          component: CdpList
         },
-
         {
           path: '',
           redirectTo: 'dashboard',

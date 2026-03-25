@@ -1,78 +1,164 @@
-<aside class="w-64 bg-white border-r border-gray-200 flex flex-col h-screen">
+<aside class="bg-primary text-white w-64 border-r border-gray-200 flex flex-col h-screen">
 
   <!-- LOGO -->
-  <div class="p-6 flex items-center gap-3 border-b">
-
-    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-
+  <div class="p-6 flex items-center gap-3 border-b flex-shrink-0">
+    <div class="w-8 h-8 bg-white-600 rounded-lg flex items-center justify-center">
       <span class="material-symbols-outlined text-white">account_balance</span>
-
     </div>
 
-    <span class="font-bold text-gray-800 text-lg">
+    <span class="font-bold text-white-800 text-lg">
       Gestión ERP
     </span>
-
   </div>
 
   <!-- MENÚ -->
-  <nav class="flex-1 px-4 py-4 space-y-1">
+  <nav class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
 
-    <a routerLink="/dashboard"
-       class="sidebar-item flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition">
-
+    <!-- DASHBOARD -->
+    <a routerLink="/dashboard" class="flex items-center gap-3 px-3 py-2 text-white-700 hover:bg-gray-100 hover:text-black rounded-md">
       <span class="material-symbols-outlined">dashboard</span>
       Dashboard
-
     </a>
 
-    <a routerLink="/empresas"
-       class="sidebar-item flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition">
-
+    <!-- EMPRESAS -->
+    <a routerLink="/empresas" class="flex items-center gap-3 px-3 py-2 text-white-700 hover:bg-gray-100 hover:text-black rounded-md">
       <span class="material-symbols-outlined">business</span>
       Empresas
-
     </a>
 
-    <a routerLink="/contabilidad"
-       class="sidebar-item flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition">
-
+    <!-- CONTABILIDAD -->
+    <a routerLink="/contabilidad" class="flex items-center gap-3 px-3 py-2 text-white-700 hover:bg-gray-100 hover:text-black rounded-md">
       <span class="material-symbols-outlined">account_balance_wallet</span>
       Contabilidad
-
     </a>
 
-    <a routerLink="/inventario"
-       class="sidebar-item flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition">
+    <!-- PRESUPUESTO -->
+    <div>
 
-      <span class="material-symbols-outlined">inventory</span>
-      Inventario
+      <button (click)="toggleMenu('presupuesto')"
+        class="w-full flex items-center justify-between px-3 py-2 text-white-700 hover:bg-gray-100 hover:text-black rounded-md">
 
-    </a>
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined">inventory</span>
+          Presupuesto
+        </div>
+
+        <span class="text-xs">▾</span>
+      </button>
+
+      @if (activeMenu === 'presupuesto') {
+
+      <div class="ml-6 mt-1 space-y-1">
+
+        <a class="block px-3 py-2 text-white-600 hover:bg-gray-100 hover:text-black rounded-md">
+          Actos administrativos
+        </a>
+
+        <a class="block px-3 py-2 text-white-600 hover:bg-gray-100 hover:text-black rounded-md">
+          Formatos Contraloría
+        </a>
+
+        <div>
+
+          <button (click)="toggleSubMenu('movimientos')"
+            class="w-full flex justify-between items-center px-3 py-2 text-white-600 hover:bg-gray-100 hover:text-black rounded-md">
+
+            Movimientos de gastos
+            <span class="text-xs">▾</span>
+
+          </button>
+
+          @if (activeSubMenu === 'movimientos') {
+
+          <div class="ml-4 mt-1 space-y-1">
+
+            <a routerLink="/cdp" class="block px-3 py-2 text-white-500 hover:bg-gray-100 hover:text-black rounded-md">
+              Certificado de Disponibilidad
+            </a>
+
+            <a class="block px-3 py-2 text-white-500 hover:bg-gray-100 hover:text-black rounded-md">
+              Devolución CDP y RP
+            </a>
+
+            <a class="block px-3 py-2 text-white-500 hover:bg-gray-100 hover:text-black rounded-md">
+              Registros presupuestales
+            </a>
+
+          </div>
+
+          }
+
+        </div>
+
+        <a class="block px-3 py-2 text-white-600 hover:bg-gray-100 hover:text-black rounded-md">
+          Movimientos de ingresos
+        </a>
+
+        <a class="block px-3 py-2 text-white-600 hover:bg-gray-100 hover:text-black rounded-md">
+          PAC
+        </a>
+
+        <a class="block px-3 py-2 text-white-600 hover:bg-gray-100 hover:text-black rounded-md">
+          Reportes
+        </a>
+
+        <!-- TABLAS MAESTRAS -->
+        <div>
+
+          <button (click)="toggleSubMenu('tablas')"
+            class="w-full flex justify-between items-center px-3 py-2 text-white-600 hover:bg-gray-100 hover:text-black rounded-md">
+            Tablas maestras
+            <span class="text-xs">▾</span>
+          </button>
+
+          @if (activeSubMenu === 'tablas') {
+
+          <div class="ml-4 mt-1 space-y-1">
+
+            <a class="block px-3 py-2 text-white-500 hover:bg-gray-100 hover:text-black rounded-md">
+              Fuente Financiación
+            </a>
+
+            <a class="block px-3 py-2 text-white-500 hover:bg-gray-100 hover:text-black rounded-md">
+              Parametrización Gastos e Ingresos
+            </a>
+
+            <a routerLink="/presupuesto" class="block px-3 py-2 text-white-500 hover:bg-gray-100 hover:text-black rounded-md">
+              Presupuesto de Gastos e Inversión
+            </a>
+
+            <a class="block px-3 py-2 text-white-500 hover:bg-gray-100 rounded-md">
+              Presupuesto de Ingresos
+            </a>
+
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
 
   </nav>
 
   <!-- USUARIO -->
-  <div class="p-4 border-t">
-
+  <div class="p-4 border-t flex-shrink-0">
     <div class="flex items-center gap-3">
-
       <div class="w-9 h-9 rounded-full bg-blue-500"></div>
 
       <div>
-
-        <p class="text-sm font-semibold text-gray-700">
+        <p class="text-sm font-semibold text-white-700">
           Admin Usuario
         </p>
-
-        <p class="text-xs text-gray-400">
+        <p class="text-xs text-white-400">
           admin@empresa.com
         </p>
-
       </div>
-
     </div>
-
   </div>
 
 </aside>
